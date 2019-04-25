@@ -1,4 +1,4 @@
-# Frameworless-SPA
+# Frameworkless-SPA
 
 A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.amin52j.com)
 
