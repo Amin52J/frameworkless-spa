@@ -14,8 +14,8 @@ A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.
 * **babel:** to transpile our ES6-7
 * **cssnano:** to not worry about the prefixes and css code performance
 * **eslint:** to have linting utility over our code
-* **express:** to get our server up and running
-* **mustache:** as our html template generator
+* **express:** to get our server up and running (can be replaced by any backend languages or technologies)
+* **mustache:** as our html template generator (can be replaced by any templating systems for any languages)
 * **prettier:** to apply linting to our code before commits
 * **SCSS:** to style our project
 * **webpack:** as our module bundler
