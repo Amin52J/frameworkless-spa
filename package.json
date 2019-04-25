@@ -1,0 +1,58 @@
+{
+  "name": "frameworkless-spa",
+  "version": "1.0.0",
+  "author": "Amin Jafari",
+  "description": "A frameworkless single page application boilerplate.",
+  "main": "server/index.jsx",
+  "scripts": {
+    "build": "rm -rf static/images && rm -rf static/pages && rm -rf static/data && mkdir static/data && cpx \"app/images/*\" static/images && cpx \"app/scripts/data/*.js\" static/data && cpx \"app/pages/*\" static/pages && NODE_ENV=production webpack --mode production && rm -rf static/styles && sass app/styles:static/styles && postcss static/styles/*.css -d static/styles",
+    "dev": "cpx \"app/images/*\" static/images -w & cpx \"app/scripts/data/*.js\" static/data -w & cpx \"app/pages/*\" static/pages -w & nodemon --watch server --watch app server/index.js & sass --watch app/styles:static/styles & webpack --mode development --watch",
+    "start": "NODE_ENV=production node server/index.js"
+  },
+  "browserslist": [
+    "> 3%"
+  ],
+  "dependencies": {
+    "express": "^4.16.4",
+    "fs": "^0.0.1-security",
+    "html-minifier": "^4.0.0",
+    "mustache": "^3.0.1",
+    "node-fetch": "^2.3.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.0.0",
+    "@babel/plugin-transform-async-to-generator": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.4.3",
+    "autoprefixer": "^9.5.1",
+    "babel-core": "^7.0.0-bridge",
+    "babel-eslint": "8.0.1",
+    "babel-loader": "7.1.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "cpx": "^1.5.0",
+    "cssnano": "^4.1.10",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-prettier": "^2.6.2",
+    "nodemon": "^1.18.11",
+    "prettier": "^1.14.3",
+    "sass": "^1.19.0",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1"
+  },
+  "engines": {
+    "node": ">=8.11.1"
+  },
+  "license": "MIT",
+  "private": false
+}

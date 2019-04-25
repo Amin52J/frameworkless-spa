@@ -1,0 +1,21 @@
+{
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "forceAllTransforms": true
+      }
+    ]
+  ],
+  "plugins": [
+    "transform-object-rest-spread",
+    "@babel/plugin-transform-async-to-generator",
+    "@babel/plugin-proposal-optional-chaining",
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
+    ]
+  ]
+}

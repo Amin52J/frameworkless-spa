@@ -1,0 +1,6 @@
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^amin52j\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.amin52j\.com$
+RewriteCond %{REQUEST_URI} !^/[0-9]+\..+\.cpaneldcv$
+RewriteCond %{REQUEST_URI} !^/\.well-known/pki-validation/[A-F0-9]{32}\.txt(?:\ Comodo\ DCV)?$
+RewriteRule ^(.*)$ "http\:\/\/www\.amin52j\.com\:49152\/$1" [R=301,P]

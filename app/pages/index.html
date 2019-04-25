@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/static/images/favicon.ico"
+    />
+    <meta
+      name="viewport"
+      content="user-scalable=0, initial-scale=1, minimum-scale=1, width=device-width, height=device-height"
+    />
+
+    <meta name="robots" content="index,follow,noodp" />
+    <meta name="googlebot" content="index,follow" />
+    <meta httpEquiv="x-ua-compatible" content="ie=edge" />
+
+    <meta
+      name="twitter:card"
+      content="summary_large_image"
+      key="twitter:card"
+    />
+    <meta name="twitter:site" content="{{TWITTER_USERNAME}}" key="twitter:site" />
+    <meta name="twitter:title" content="{{TWITTER_NAME}}" key="twitter:title" />
+    <meta
+      name="twitter:description"
+      content="{{TWITTER_DESCRIPTION}}"
+      key="twitter:description"
+    />
+    <meta
+      name="twitter:image:src"
+      content="{{TWITTER_IMAGE}}"
+      key="twitter:image:src"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="{{TWITTER_IMAGE_ALT}}"
+      key="twitter:image:alt"
+    />
+
+    <meta property="og:type" content="website" key="og:type" />
+    <meta property="og:title" content="{{OG_TITLE}}" key="og:title" />
+    <meta property="og:site_name" content="{{OG_SITE_NAME}}" key="og:site_name" />
+    <meta property="og:url" content="{{OG_URL}}" key="og:url" />
+    <meta
+      property="og:description"
+      content="{{OG_DESCRIPTION}}"
+      key="og:description"
+    />
+    <meta property="og:image" content="{{OG_IMAGE}}" key="og:image" />
+    <meta
+      property="og:image:alt"
+      content="{{OG_IMAGE_ALT}}"
+      key="og:image:alt"
+    />
+    <meta name="theme-color" content="{{THEME_COLOR}}" />
+
+    <title>{{TITLE}}</title>
+    <meta name="description" content="{{DESCRIPTION}}" key="description" />
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/styles/global.css" />
+    <!-- ------- -->
+  </head>
+  <body>
+    <header>
+      <a href="/">Home Page</a>
+      <a href="/page-a">Page A</a>
+      <a href="/page-b">Page B</a>
+    </header>
+    <main id="app">
+      {{{content}}}
+    </main>
+    <!-- Scripts -->
+    <script src="/static/scripts/global.js"></script>
+  <!-- ------- -->
+  </body>
+</html>
