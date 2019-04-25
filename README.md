@@ -2,6 +2,10 @@
 
 A frameworkless single page application boilerplate.
 
+### Size
+
+Only 1.2 KB gzipped Javascript overhead.
+
 ### Technologies
 
 * **babel:** to transpile our ES6-7
