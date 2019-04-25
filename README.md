@@ -9,6 +9,7 @@ A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.
 * **Easy to use:** Nothing more than the old HTML and CSS development that we all first started from.
 * **Full control:** Using this boilerplate and/or terminology we have full control over what and how we wanna implement things and what technologies and environments we wanna work with.
 * **High performance:** Nothing beats the power and performance of Vanilla JS, HTML and CSS.
+* **Extendible:** You can easily twist and extend this boilerplate and/or terminology to any extent that your mind and needs go.
 
 ### Technologies
 
