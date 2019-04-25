@@ -2,9 +2,12 @@
 
 A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.amin52j.com)
 
-### Size
+### Benefits
 
-Only 1.2 KB gzipped Javascript overhead.
+* **Super lightweight:** Only 1.2 KB gzipped Javascript overhead.
+* **SEO Friendly:** 100% SEO friendly with SSR.
+* **Easy to use:** Nothing more than the old HTML and CSS development that we all first started from.
+* **Full control:** Using this boilerplate and/or terminology we have full control over what and how we wanna implement things and what technologies and environments we wanna work with.
 
 ### Technologies
 
