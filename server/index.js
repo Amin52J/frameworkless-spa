@@ -115,6 +115,13 @@ app.get('/static/images/*', (req, res) =>
     ),
   ),
 );
+app.get('/static/others/*', (req, res) =>
+  res.sendFile(
+    path.join(
+      `${__dirname}/../static/others/${req.url.split('/').slice(-1)[0]}`,
+    ),
+  ),
+);
 app.get('/partial', (req, res) =>
   getPartialHtml(LANDING_PAGE, (err, data) => {
     if (err) {
