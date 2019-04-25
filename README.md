@@ -8,6 +8,7 @@ A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.
 * **SEO Friendly:** 100% SEO friendly with SSR.
 * **Easy to use:** Nothing more than the old HTML and CSS development that we all first started from.
 * **Full control:** Using this boilerplate and/or terminology we have full control over what and how we wanna implement things and what technologies and environments we wanna work with.
+* **High performance:** Nothing beats the power and performance of Vanilla JS, HTML and CSS.
 
 ### Technologies
 
