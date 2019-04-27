@@ -4,7 +4,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const glob = require('glob');
 
 let entries = glob.sync('./app/scripts/**/*.js', {
-  ignore: ['./app/scripts/data/*.js'],
+  ignore: ['./app/scripts/data/**/*.js'],
 });
 entries = entries.reduce((acc, cur) => {
   acc[cur.replace('./app/scripts', '').replace('/pages', '')] = cur;
