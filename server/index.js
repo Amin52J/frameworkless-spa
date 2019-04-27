@@ -7,87 +7,102 @@ const { PORT, MINIFIER_OPTIONS, METAS, LANDING_PAGE } = require('./config');
 
 const app = express();
 
-const renderHtml = (content, res) => {
-  try {
-    fs.readFile(
-      path.join(`${__dirname}/../static/pages/index.html`),
-      'utf8',
-      (err, html) => {
+const readFile = filePath =>
+  new Promise((resolve, reject) => {
+    try {
+      fs.readFile(filePath, 'utf8', (err, html) => {
         if (err) {
-          res.status(404).send('Page not found!');
-        } else {
-          let data = {};
-          try {
-            data = require(path.join(`${__dirname}/../static/data/index.js`));
-          } catch (e) {
-            data = {};
-          }
-          const layout = Mustache.render(html, {
-            content,
-            ...data,
-            ...METAS,
-          });
-          res.send(minify(layout, MINIFIER_OPTIONS));
+          reject(err);
         }
-      },
+        resolve(html);
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+
+const renderHtml = async (content, res) => {
+  try {
+    const html = await readFile(
+      path.join(`${__dirname}/../static/pages/index.html`),
     );
+    let data = {};
+    try {
+      data = require(path.join(`${__dirname}/../static/data/index.js`));
+    } catch (e) {
+      data = {};
+    }
+    const layout = Mustache.render(html, {
+      content,
+      ...data,
+      ...METAS,
+    });
+    res.send(minify(layout, MINIFIER_OPTIONS));
   } catch (err) {
     res.status(404).send('Page not found!');
   }
 };
 
-const getPartialHtml = (fileName, callback) => {
+const partialSuccess = async (html, fileName, callback, extendedPage) => {
+  let data = {};
   try {
-    fs.readFile(
-      path.join(`${__dirname}/../static/pages/${fileName}.html`),
-      'utf8',
-      async (err, html) => {
-        if (err) {
-          callback('Page not found!', null);
-        } else {
-          let data = {};
-          try {
-            data = require(path.join(
-              `${__dirname}/../static/data/${fileName.split('.')[0]}.js`,
-            ));
-          } catch (e) {
-            data = {};
-          }
-          await Promise.all(
-            Object.keys(data).map(async key => {
-              if (typeof data[key] === 'function') {
-                data[key] = await data[key]();
-              }
-            }),
-          );
-          fs.readFile(
-            path.join(`${__dirname}/../static/scripts/${fileName}.js`),
-            'utf8',
-            (err, script) => {
-              fs.readFile(
-                path.join(`${__dirname}/../static/styles/${fileName}.css`),
-                'utf8',
-                (err, style) => {
-                  const content = Mustache.render(
-                    `<style>{{{style}}}</style>${html}<script>{{{script}}}</script>`,
-                    {
-                      ...data,
-                      script,
-                      style,
-                    },
-                  );
-                  callback(null, minify(content, MINIFIER_OPTIONS));
-                },
-              );
-            },
-          );
-        }
-      },
-    );
-  } catch (err) {
-    callback('Page not found!', null);
+    data = require(path.join(
+      `${__dirname}/../static/data/${fileName.split('.')[0]}.js`,
+    ));
+  } catch (e) {
+    data = {};
   }
+  await Promise.all(
+    Object.keys(data).map(async key => {
+      if (typeof data[key] === 'function') {
+        data[key] = await data[key]();
+      }
+    }),
+  );
+  let script = null;
+  try {
+    script = await readFile(
+      path.join(`${__dirname}/../static/scripts/${fileName}.js`),
+    );
+  } catch (e) {}
+  let style = null;
+  try {
+    style = await readFile(
+      path.join(`${__dirname}/../static/styles/${fileName}.css`),
+    );
+  } catch (e) {}
+  const content = Mustache.render(
+    `<style>{{{style}}}</style>${html}<script>{{{script}}}</script>`,
+    {
+      ...data,
+      script,
+      style,
+      content: extendedPage,
+    },
+  );
+  callback(minify(content, MINIFIER_OPTIONS));
 };
+
+const getPartialHtml = (fileName, extendedPage = '') =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const html = await readFile(
+        path.join(`${__dirname}/../static/pages${fileName}.html`),
+      );
+      partialSuccess(html, fileName, resolve, extendedPage);
+    } catch (err) {
+      if (!fileName.includes('/index')) {
+        try {
+          const data = await getPartialHtml(`${fileName}/index`);
+          resolve(data);
+        } catch (e) {
+          reject(e);
+        }
+      } else {
+        reject(err);
+      }
+    }
+  });
 
 app.get('/static/styles/*', (req, res) =>
   res.sendFile(
@@ -122,53 +137,71 @@ app.get('/static/others/*', (req, res) =>
     ),
   ),
 );
-app.get('/partial', (req, res) =>
-  getPartialHtml(LANDING_PAGE, (err, data) => {
-    if (err) {
-      res.status(404).send(err);
-    } else {
-      res.send(data);
-    }
-  }),
-);
-app.get('/partial/*', (req, res) =>
-  getPartialHtml(
-    req.url
-      .split('/')
-      .slice(-1)[0]
-      .split('.')[0],
-    (err, data) => {
-      if (err) {
-        res.status(404).send(err);
-      } else {
-        res.send(data);
+app.get('/partial', async (req, res) => {
+  try {
+    const data = await getPartialHtml(`/${LANDING_PAGE}`);
+    res.send(data);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+app.get('/partial/*', async (req, res) => {
+  const fileName = req.url.replace('/partial', '').split('.')[0];
+  const paths = fileName.split('/').filter(a => a);
+  const data = await Promise.all(
+    paths.map(async (p, index) => {
+      try {
+        const route = Array(index)
+          .fill('')
+          .map((a, i) => paths[i])
+          .join('/');
+        return await getPartialHtml(`${route ? '/' : ''}${route}/${p}`);
+      } catch (e) {
+        return null;
       }
-    },
-  ),
-);
-app.get('/', (req, res) =>
-  getPartialHtml(LANDING_PAGE, (err, data) => {
-    if (err) {
-      res.status(404).send(err);
-    } else {
-      renderHtml(data, res);
-    }
-  }),
-);
-app.get('*', (req, res) =>
-  getPartialHtml(
-    req.url
-      .split('/')
-      .slice(-1)[0]
-      .split('.')[0],
-    (err, data) => {
-      if (err) {
-        res.status(404).send(err);
-      } else {
-        renderHtml(data, res);
+    }),
+  );
+  if (data.indexOf(null) > -1) {
+    res.status(404).send('Page not found!');
+  } else {
+    const html = data
+      .reverse()
+      .reduce((acc, cur) => cur.replace('?{content}?', acc), '');
+    res.send(html);
+  }
+});
+app.get('/', async (req, res) => {
+  try {
+    const data = await getPartialHtml(`/${LANDING_PAGE}`);
+    renderHtml(data, res);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+app.get('*', async (req, res) => {
+  const fileName = req.url.split('.')[0];
+  const paths = fileName.split('/').filter(a => a);
+  const data = await Promise.all(
+    paths.map(async (p, index) => {
+      try {
+        const route = Array(index)
+          .fill('')
+          .map((a, i) => paths[i])
+          .join('/');
+        return await getPartialHtml(`${route ? '/' : ''}${route}/${p}`);
+      } catch (e) {
+        return null;
       }
-    },
-  ),
-);
+    }),
+  );
+  if (data.indexOf(null) > -1) {
+    res.status(404).send('Page not found!');
+  } else {
+    const html = data
+      .reverse()
+      .reduce((acc, cur) => cur.replace('?{content}?', acc), '');
+    renderHtml(html, res);
+  }
+});
 
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
