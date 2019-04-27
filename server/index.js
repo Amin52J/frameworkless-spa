@@ -165,9 +165,22 @@ app.get('/partial/*', async (req, res) => {
     res.status(404).send('Page not found!');
   } else {
     const html = data
+      .slice()
       .reverse()
-      .reduce((acc, cur) => cur.replace('?{content}?', acc), '');
-    res.send(html);
+      .reduce(
+        (acc, cur, index) =>
+          cur.includes('?{content}?') ||
+          cur.includes(`?{content-${paths.slice().reverse()[index - 1]}}?`)
+            ? cur
+                .replace('?{content}?', acc)
+                .replace(
+                  `?{content-${paths.slice().reverse()[index - 1]}}?`,
+                  acc,
+                )
+            : acc || cur,
+        '',
+      );
+    res.send(html.replace(/\?{.*?}\?/g, ''));
   }
 });
 app.get('/', async (req, res) => {
@@ -198,9 +211,22 @@ app.get('*', async (req, res) => {
     res.status(404).send('Page not found!');
   } else {
     const html = data
+      .slice()
       .reverse()
-      .reduce((acc, cur) => cur.replace('?{content}?', acc), '');
-    renderHtml(html, res);
+      .reduce(
+        (acc, cur, index) =>
+          cur.includes('?{content}?') ||
+          cur.includes(`?{content-${paths.slice().reverse()[index - 1]}}?`)
+            ? cur
+                .replace('?{content}?', acc)
+                .replace(
+                  `?{content-${paths.slice().reverse()[index - 1]}}?`,
+                  acc,
+                )
+            : acc || cur,
+        '',
+      );
+    renderHtml(html.replace(/\?{.*?}\?/g, ''), res);
   }
 });
 
