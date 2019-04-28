@@ -32,6 +32,13 @@ const renderHtml = async (content, res) => {
     } catch (e) {
       data = {};
     }
+    await Promise.all(
+      Object.keys(data).map(async key => {
+        if (typeof data[key] === 'function') {
+          data[key] = await data[key]();
+        }
+      }),
+    );
     const layout = Mustache.render(html, {
       content,
       ...data,
