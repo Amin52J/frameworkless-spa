@@ -2,6 +2,8 @@
 
 A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.amin52j.com)
 
+You can read more about the idea, theory and the implementation of this boilerplate on [**this article**](https://medium.com/@a.jafari.90/framework-less-single-page-application-a547325f6e0c).
+
 ### Benefits
 
 * **Super lightweight:** Only 1.2 KB gzipped Javascript overhead.
@@ -10,6 +12,7 @@ A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.
 * **Full control:** Using this boilerplate and/or terminology we have full control over what and how we wanna implement things and what technologies and environments we wanna work with.
 * **High performance:** Nothing beats the power and performance of Vanilla JS, HTML and CSS.
 * **Extendible:** You can easily twist and extend this boilerplate and/or terminology to any extent that your mind and needs go.
+* **File System Routing:** 100% file system routing support for all your pages and scripts.
 
 ### Technologies
 
