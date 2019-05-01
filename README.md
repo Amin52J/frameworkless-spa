@@ -23,7 +23,7 @@ You can read more about the idea, theory and the implementation of this boilerpl
 * **eslint:** to have linting utility over our code
 * **express:** to get our server up and running (can be replaced by any backend languages or technologies)
 * **mustache:** as our html template generator (can be replaced by any templating systems for any languages)
-* **prettier:** to apply linting to our code before commits
+* **prettier:** to apply linting and code styling to our code
 * **SCSS:** to style our project
 * **webpack:** as our module bundler
 
