@@ -4,7 +4,7 @@ A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.
 
 You can read more about the idea, theory and the implementation of this boilerplate on [**this article**](https://medium.com/@a.jafari.90/framework-less-single-page-application-a547325f6e0c).
 
-### This is strictly not a Javascript driven framework or templating system.
+### NOTE: This is not a Javascript driven framework or templating system, please read the article above to see how it works.
 
 ### Benefits
 
