@@ -9,7 +9,7 @@ You can read more about the idea, theory and the implementation of this boilerpl
 ### Benefits
 
 * **Super lightweight:** Only 1.2 KB gzipped Javascript overhead.
-* **SEO Friendly:** 100% SEO friendly with SSR.
+* **SEO Friendly:** 100% SEO friendly with complete SSR (no workarounds, just the simple fetch and serve).
 * **Easy to use:** Nothing more than the old HTML and CSS development that we all first started from.
 * **Full control:** Using this boilerplate and/or terminology we have full control over what and how we wanna implement things and what technologies and environments we wanna work with.
 * **High performance:** Nothing beats the power and performance of Vanilla JS, HTML and CSS.
