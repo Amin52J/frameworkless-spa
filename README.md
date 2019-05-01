@@ -14,7 +14,7 @@ You can read more about the idea, theory and the implementation of this boilerpl
 * **Full control:** Using this boilerplate and/or terminology we have full control over what and how we wanna implement things and what technologies and environments we wanna work with.
 * **High performance:** Nothing beats the power and performance of Vanilla JS, HTML and CSS.
 * **Extendible:** You can easily twist and extend this boilerplate and/or terminology to any extent that your mind and needs go which means you can easily use any kind of libraries like state managers (e.g. redux) or DOM Manipulators (e.g. jQuery).
-* **File System Routing:** 100% file system routing support for all your pages and scripts.
+* **File System Routing:** 100% file system routing support for all your pages and scripts. You never need to worry about routing and route handling.
 
 ### Technologies
 
