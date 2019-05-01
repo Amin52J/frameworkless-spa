@@ -4,6 +4,8 @@ A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.
 
 You can read more about the idea, theory and the implementation of this boilerplate on [**this article**](https://medium.com/@a.jafari.90/framework-less-single-page-application-a547325f6e0c).
 
+## This is strictly not a Javascript driven framework or templating system.
+
 ### Benefits
 
 * **Super lightweight:** Only 1.2 KB gzipped Javascript overhead.
@@ -32,15 +34,47 @@ You can read more about the idea, theory and the implementation of this boilerpl
 * `yarn dev`
 * visit [localhost:3000](http://127.0.0.1:3000)
 
-### NOTE:
-
-* All modules used are the latest versions and are implemented according to their respective latest version docs. (as of Apr 2019)
-
 ### Scripts
 
 * `yarn build` to make a single production build
 * `yarn dev` to make a development build, run the server and watch for changes
 * `yarn start` to start the server
+
+### Docs
+
+#### File System Routing and File System Templating
+
+In this boilerplate all the imports of styles, scripts, data and routing are based on the file system structure which means the folder/file structure you choose for your html templates defines the routes and they need to be consistent in styles, scripts and data folders.
+
+#### HTML Templating
+
+* **Extend:** In order to extend the styles and scripts of a template in another template we add the following command to the beginning of the template `?{extend-path/to/template}?`
+* **Partial Render:** In order to render a template into a certain place in the parent template, we use `?{content}?` in the intended place in parent.
+* **Route Specific Partial Render:** In order to do a parital render just for a specific sub-page we use `?{content-template-name}?`
+* **Full Page Render:** If we want the sub-page to replace the parent page, we should leave out `?{content}?` in the parent template.
+
+#### Client-Side Route Handling
+
+**Initialization:** In order to initialize the client side routing we should import router from `/scripts/helpers/router` and run the function with the options object. i.e. `router(options)`
+
+```js
+  router({
+    delay: 0, // the delay to load the new route. gives us time to animate the page offload
+    routeWillChange: () => {}, // this function will run before every route change
+    routeDidChange: () => {}, // this function will run after every route change
+  });
+```
+
+**routerTransition Hook:** This method exposes two events to us, the page load and the page offload. The function we pass to it is what runs on page load and the function it returns is what runs right before page offload.
+
+```js
+routerTransition(() => {
+  console.log('page loaded');
+  return () => {
+    console.log('page offloading');
+  };
+});
+```
 
 ### License
 
