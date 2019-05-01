@@ -2,7 +2,7 @@
 
 A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.amin52j.com)
 
-You can read more about the idea, theory and the implementation of this boilerplate on [**this article**](https://medium.com/@a.jafari.90/framework-less-single-page-application-a547325f6e0c).
+You can read more about the idea, theory and the implementation of this boilerplate in [**this article**](https://medium.com/@a.jafari.90/framework-less-single-page-application-a547325f6e0c).
 
 **NOTE:** This is not a Javascript driven framework or templating system, please read the article above to see how it works.
 
