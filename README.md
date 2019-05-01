@@ -10,7 +10,7 @@ You can read more about the idea, theory and the implementation of this boilerpl
 
 * **Super lightweight:** Only 1.2 KB gzipped Javascript overhead.
 * **SEO Friendly:** 100% SEO friendly with complete SSR (no workarounds, just the simple fetch and serve).
-* **Easy to use:** Nothing more than the old HTML and CSS development that we all first started from.
+* **Easy to use:** Nothing more than the old HTML and CSS development that we all first started with.
 * **Full control:** Using this boilerplate and/or terminology we have full control over what and how we wanna implement things and what technologies and environments we wanna work with.
 * **High performance:** Nothing beats the power and performance of Vanilla JS, HTML and CSS.
 * **Extendible:** You can easily twist and extend this boilerplate and/or terminology to any extent that your mind and needs go which means you can easily use any kind of libraries like state managers (e.g. redux) or DOM Manipulators (e.g. jQuery).
