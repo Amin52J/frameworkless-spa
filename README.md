@@ -4,7 +4,7 @@ A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.
 
 You can read more about the idea, theory and the implementation of this boilerplate on [**this article**](https://medium.com/@a.jafari.90/framework-less-single-page-application-a547325f6e0c).
 
-### NOTE: This is not a Javascript driven framework or templating system, please read the article above to see how it works.
+**NOTE:** This is not a Javascript driven framework or templating system, please read the article above to see how it works.
 
 ### Benefits
 
@@ -13,7 +13,7 @@ You can read more about the idea, theory and the implementation of this boilerpl
 * **Easy to use:** Nothing more than the old HTML and CSS development that we all first started from.
 * **Full control:** Using this boilerplate and/or terminology we have full control over what and how we wanna implement things and what technologies and environments we wanna work with.
 * **High performance:** Nothing beats the power and performance of Vanilla JS, HTML and CSS.
-* **Extendible:** You can easily twist and extend this boilerplate and/or terminology to any extent that your mind and needs go.
+* **Extendible:** You can easily twist and extend this boilerplate and/or terminology to any extent that your mind and needs go which means you can easily use any kind of libraries like state managers (e.g. redux) or DOM Manipulators (e.g. jQuery).
 * **File System Routing:** 100% file system routing support for all your pages and scripts.
 
 ### Technologies
