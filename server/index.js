@@ -67,17 +67,37 @@ const partialSuccess = async (html, fileName, callback, extendedPage) => {
     }),
   );
   let script = null;
+  let extend = html.match(/\?{extend-.*?}\?/);
+  if (extend && extend.length) {
+    extend = extend[0].replace('?{extend-', '').replace('}?', '');
+  }
   try {
     script = await readFile(
       path.join(`${__dirname}/../static/scripts/${fileName}.js`),
     );
-  } catch (e) {}
+  } catch (e) {
+    if (extend) {
+      try {
+        script = await readFile(
+          path.join(`${__dirname}/../static/scripts/${extend}.js`),
+        );
+      } catch (e) {}
+    }
+  }
   let style = null;
   try {
     style = await readFile(
       path.join(`${__dirname}/../static/styles/${fileName}.css`),
     );
-  } catch (e) {}
+  } catch (e) {
+    if (extend) {
+      try {
+        style = await readFile(
+          path.join(`${__dirname}/../static/styles/${extend}.css`),
+        );
+      } catch (e) {}
+    }
+  }
   const content = Mustache.render(
     `<style>{{{style}}}</style>${html}<script>{{{script}}}</script>`,
     {
