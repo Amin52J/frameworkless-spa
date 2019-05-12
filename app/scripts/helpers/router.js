@@ -65,7 +65,7 @@ const router = ({
   /* initialization */
   document.querySelectorAll('a').forEach(addListenerToAnchors);
   window.onpopstate = () => {
-    onRouteChange(window.location.pathname, true);
+    onRouteChange(window.location.pathname + window.location.search, true);
   };
   const pageOnload = new CustomEvent('page-onload');
   document.dispatchEvent(pageOnload);
