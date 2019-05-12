@@ -173,7 +173,7 @@ app.get('/partial', async (req, res) => {
   }
 });
 app.get('/partial/*', async (req, res) => {
-  const fileName = req.url.replace('/partial', '').split('.')[0];
+  const fileName = req.path.replace('/partial', '').split('.')[0];
   const paths = fileName.split('/').filter(a => a);
   const data = await Promise.all(
     paths.map(async (p, index) => {
@@ -219,7 +219,7 @@ app.get('/', async (req, res) => {
   }
 });
 app.get('*', async (req, res) => {
-  const fileName = req.url.split('.')[0];
+  const fileName = req.path.split('.')[0];
   const paths = fileName.split('/').filter(a => a);
   const data = await Promise.all(
     paths.map(async (p, index) => {
