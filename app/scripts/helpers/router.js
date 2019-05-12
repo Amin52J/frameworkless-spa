@@ -1,62 +1,66 @@
 import loadScript from './loadScript';
 
+function anchorListener(e) {
+  e.preventDefault();
+  const href = this.getAttribute('href');
+  if (window.location.pathname !== href) {
+    onRouteChange(href);
+  }
+}
+
+const addListenerToAnchors = anchor => {
+  const href = anchor.getAttribute('href');
+  if (
+    !href.startsWith('http') &&
+    !href.startsWith('wwww') &&
+    !href.startsWith('//')
+  ) {
+    anchor.addEventListener('click', anchorListener);
+  }
+};
+
+const removeListenerFromAnchors = anchor => {
+  const href = anchor.getAttribute('href');
+  if (
+    !href.startsWith('http') &&
+    !href.startsWith('wwww') &&
+    !href.startsWith('//')
+  ) {
+    anchor.removeEventListener('click', anchorListener);
+  }
+};
+
+const onRouteChange = (href, noPush) => {
+  const _app = document.getElementById('app');
+  window.routeWillChange();
+  setTimeout(() => {
+    if (!noPush) {
+      window.history.pushState({}, href, `${window.location.origin}${href}`);
+    }
+    fetch(`/partial${href}`)
+      .then(resp => resp.text())
+      .then(html => {
+        const pageOffload = new CustomEvent('page-offload');
+        document.dispatchEvent(pageOffload);
+        app.querySelectorAll('a').forEach(removeListenerFromAnchors);
+        _app.innerHTML = html;
+        _app.querySelectorAll('a').forEach(addListenerToAnchors);
+        loadScript(_app);
+        const pageOnload = new CustomEvent('page-onload');
+        document.dispatchEvent(pageOnload);
+        window.routeDidChange();
+      });
+  }, window.routerDelay);
+};
+
 const router = ({
   routeWillChange = () => {},
   routeDidChange = () => {},
   delay = 0,
-}) => {
-  const onRouteChange = (href, noPush) => {
-    const _app = document.getElementById('app');
-    routeWillChange();
-    setTimeout(() => {
-      if (!noPush) {
-        window.history.pushState({}, href, `${window.location.origin}${href}`);
-      }
-      fetch(`/partial${href}`)
-        .then(resp => resp.text())
-        .then(html => {
-          const pageOffload = new CustomEvent('page-offload');
-          document.dispatchEvent(pageOffload);
-          app.querySelectorAll('a').forEach(removeListenerFromAnchors);
-          _app.innerHTML = html;
-          _app.querySelectorAll('a').forEach(addListenerToAnchors);
-          loadScript(_app);
-          const pageOnload = new CustomEvent('page-onload');
-          document.dispatchEvent(pageOnload);
-          routeDidChange();
-        });
-    }, delay);
-  };
-
-  function anchorListener(e) {
-    e.preventDefault();
-    const href = this.getAttribute('href');
-    if (window.location.pathname !== href) {
-      onRouteChange(href);
-    }
-  }
-
-  const addListenerToAnchors = anchor => {
-    const href = anchor.getAttribute('href');
-    if (
-      !href.startsWith('http') &&
-      !href.startsWith('wwww') &&
-      !href.startsWith('//')
-    ) {
-      anchor.addEventListener('click', anchorListener);
-    }
-  };
-
-  const removeListenerFromAnchors = anchor => {
-    const href = anchor.getAttribute('href');
-    if (
-      !href.startsWith('http') &&
-      !href.startsWith('wwww') &&
-      !href.startsWith('//')
-    ) {
-      anchor.removeEventListener('click', anchorListener);
-    }
-  };
+} = {}) => {
+  window.routeWillChange = routeWillChange;
+  window.routeDidChange = routeDidChange;
+  window.routerDelay = delay;
 
   /* initialization */
   document.querySelectorAll('a').forEach(addListenerToAnchors);
@@ -87,5 +91,7 @@ export const routerTransition = (cb = () => () => {}) => {
   document.addEventListener('page-onload', onload);
   document.addEventListener('page-offload', offload);
 };
+
+export const routeTo = onRouteChange;
 
 export default router;
