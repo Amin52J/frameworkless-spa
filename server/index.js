@@ -21,6 +21,11 @@ const readFile = filePath =>
     }
   });
 
+const requireUncached = module => {
+  delete require.cache[require.resolve(module)];
+  return require(module);
+};
+
 const renderHtml = async (content, res) => {
   try {
     const html = await readFile(
@@ -28,7 +33,7 @@ const renderHtml = async (content, res) => {
     );
     let data = {};
     try {
-      data = require(path.join(`${__dirname}/../static/data/index.js`));
+      data = requireUncached(path.join(`${__dirname}/../static/data/index.js`));
     } catch (e) {
       data = {};
     }
@@ -53,9 +58,9 @@ const renderHtml = async (content, res) => {
 const partialSuccess = async (html, fileName, callback, extendedPage) => {
   let data = {};
   try {
-    data = require(path.join(
-      `${__dirname}/../static/data/${fileName.split('.')[0]}.js`,
-    ));
+    data = requireUncached(
+      path.join(`${__dirname}/../static/data/${fileName.split('.')[0]}.js`),
+    );
   } catch (e) {
     data = {};
   }
