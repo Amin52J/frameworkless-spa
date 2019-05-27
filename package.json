@@ -5,7 +5,7 @@
   "description": "A frameworkless single page application boilerplate.",
   "main": "server/index.jsx",
   "scripts": {
-    "build": "rm -rf static/images && rm -rf static/others && rm -rf static/pages && rm -rf static/data && mkdir static/data && cpx \"app/images/**/*\" static/images && cpx \"app/others/**/*\" static/others && cpx \"app/scripts/data/**/*.js\" static/data && cpx \"app/pages/**/*\" static/pages && NODE_ENV=production webpack --mode production && rm -rf static/styles && sass app/styles:static/styles && postcss static/styles/*.css -d static/styles",
+    "build": "rm -rf static/images && rm -rf static/others && rm -rf static/pages && rm -rf static/data && mkdir -p static/data && cpx \"app/images/**/*\" static/images && cpx \"app/others/**/*\" static/others && cpx \"app/scripts/data/**/*.js\" static/data && cpx \"app/pages/**/*\" static/pages && NODE_ENV=production webpack --mode production && rm -rf static/styles && sass app/styles:static/styles && node_modules/postcss-cli/bin/postcss static/styles/*.css -d static/styles",
     "dev": "cpx \"app/images/**/*\" static/images -w & cpx \"app/others/**/*\" static/others -w & cpx \"app/scripts/data/**/*.js\" static/data -w & cpx \"app/pages/**/*\" static/pages -w & nodemon --watch server --watch app server/index.js & sass --watch app/styles:static/styles & webpack --mode development --watch",
     "start": "NODE_ENV=production node server/index.js"
   },
