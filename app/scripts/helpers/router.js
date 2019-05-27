@@ -34,15 +34,15 @@ const onRouteChange = (href, noPush) => {
   const _app = document.getElementById('app');
   window.routeWillChange();
   setTimeout(() => {
-    if (!noPush) {
-      window.history.pushState({}, href, `${window.location.origin}${href}`);
-    }
     fetch(`/partial${href}`)
       .then(resp => resp.text())
       .then(html => {
         const pageOffload = new CustomEvent('page-offload');
         document.dispatchEvent(pageOffload);
         app.querySelectorAll('a').forEach(removeListenerFromAnchors);
+        if (!noPush) {
+          window.history.pushState({}, href, `${window.location.origin}${href}`);
+        }
         _app.innerHTML = html;
         _app.querySelectorAll('a').forEach(addListenerToAnchors);
         loadScript(_app);
