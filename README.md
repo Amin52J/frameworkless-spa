@@ -1,6 +1,6 @@
 # Frameworkless-SPA
 
-A frameworkless single page application boilerplate. [**LIVE DEMO**](http://www.amin52j.com)
+A frameworkless single page application boilerplate. [**LIVE DEMO**](http://movie-collection.amin52j.com)
 
 - **Super lightweight:** Only 1.2 KB gzipped Javascript overhead.
 - **SEO Friendly:** 100% SEO friendly with complete SSR (no workarounds, just the simple fetch and serve).
