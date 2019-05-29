@@ -4,8 +4,53 @@ const fs = require('fs');
 const Mustache = require('mustache');
 const minify = require('html-minifier').minify;
 const { PORT, MINIFIER_OPTIONS, METAS, LANDING_PAGE } = require('./config');
+const routes = require('./routes');
 
 const app = express();
+
+app.use((req, res, next) => {
+  let url = req.url.replace('/partial', '');
+  let path = null;
+  const isPartial = req.url.includes('/partial');
+  const exceptions = { l: 'landingpage' };
+  const splittedRoutes = Object.keys(routes)
+    .filter(routeName => !routes[routeName].includes('*'))
+    .map(routeName => routes[routeName].split('/').filter(item => item));
+
+  const query = url.split('?')[1] || '';
+  url = url.split('?')[0];
+  const splittedUrl = url.split('/').filter(item => item);
+  const matchedRoute = splittedRoutes.find(
+    route => route[0] === splittedUrl[0],
+  );
+  if (matchedRoute && matchedRoute.length > 0) {
+    const pairs = matchedRoute
+      .map((route, index) =>
+        splittedUrl[index]
+          ? {
+              [route
+                .split(':')
+                .join('')
+                .split('?')
+                .join('')]: splittedUrl[index] || '',
+            }
+          : '',
+      )
+      .filter(item => item);
+    const pairsObj = pairs.reduce((acc, cur) => ({ ...acc, ...cur }), {});
+    path = Object.keys(pairsObj).reduce((acc, cur) => {
+      if (pairsObj[cur] === cur) {
+        return `${acc}/${exceptions[cur] || cur}`;
+      }
+      return `${acc}${acc.includes('?') ? '&' : '?'}${cur}=${pairsObj[cur]}`;
+    }, '');
+    path = `${isPartial ? '/partial' : ''}${path}${
+      query ? (path.includes('?') ? '&' : '?') : ''
+    }${query}`;
+    req.url = path;
+  }
+  next();
+});
 
 const readFile = filePath =>
   new Promise((resolve, reject) => {
