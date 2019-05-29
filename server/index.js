@@ -12,7 +12,7 @@ app.use((req, res, next) => {
   let url = req.url.replace('/partial', '');
   let path = null;
   const isPartial = req.url.includes('/partial');
-  const exceptions = { l: 'landingpage' };
+  const exceptions = {};
   const splittedRoutes = Object.keys(routes)
     .filter(routeName => !routes[routeName].includes('*'))
     .map(routeName => routes[routeName].split('/').filter(item => item));
@@ -23,7 +23,14 @@ app.use((req, res, next) => {
   const matchedRoute = splittedRoutes.find(
     route => route[0] === splittedUrl[0],
   );
-  if (matchedRoute && matchedRoute.length > 0) {
+  const requiredParts =
+    (matchedRoute && matchedRoute.filter(item => !item.includes('?'))) || [];
+  if (
+    matchedRoute &&
+    matchedRoute.length > 0 &&
+    requiredParts.length < splittedUrl.length &&
+    !url.includes('.map')
+  ) {
     const pairs = matchedRoute
       .map((route, index) =>
         splittedUrl[index]
@@ -47,9 +54,18 @@ app.use((req, res, next) => {
     path = `${isPartial ? '/partial' : ''}${path}${
       query ? (path.includes('?') ? '&' : '?') : ''
     }${query}`;
+    req.query = path
+      .split('?')[1]
+      .split('&')
+      .reduce((acc, cur) => {
+        const [key, value] = cur.split('=');
+        acc[key] = value;
+      }, req.query);
     req.url = path;
+    app.handle(req, res);
+  } else {
+    next();
   }
-  next();
 });
 
 const readFile = filePath =>
