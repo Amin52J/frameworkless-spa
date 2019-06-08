@@ -1,3 +1,3 @@
 module.exports = {
-  pageA: '/page-a/:id?',
+  pageA: '/page-a/:id?/:name?',
 };

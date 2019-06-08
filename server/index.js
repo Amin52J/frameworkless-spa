@@ -29,7 +29,8 @@ app.use((req, res, next) => {
     matchedRoute &&
     matchedRoute.length > 0 &&
     requiredParts.length < splittedUrl.length &&
-    !url.includes('.map')
+    !url.includes('.map') &&
+    !url.includes('$')
   ) {
     const pairs = matchedRoute
       .map((route, index) =>
@@ -54,14 +55,25 @@ app.use((req, res, next) => {
     path = `${isPartial ? '/partial' : ''}${path}${
       query ? (path.includes('?') ? '&' : '?') : ''
     }${query}`;
+    const originalQueries = Object.keys(req.query || {});
     req.query = path
       .split('?')[1]
       .split('&')
       .reduce((acc, cur) => {
         const [key, value] = cur.split('=');
         acc[key] = value;
+        return acc;
       }, req.query);
-    req.url = path;
+    req.url = `${path.split('?')[0]}/${path
+      .split('?')[1]
+      .split('&')
+      .map(item =>
+        originalQueries.includes(item.split('=')[0])
+          ? null
+          : `$${item.split('=')[0]}`,
+      )
+      .filter(a => a)
+      .join('/')}?${path.split('?')[1]}`;
     app.handle(req, res);
   } else {
     next();
@@ -87,7 +99,7 @@ const requireUncached = module => {
   return require(module);
 };
 
-const renderHtml = async (content, res) => {
+const renderHtml = async (content, res, req) => {
   try {
     const html = await readFile(
       path.join(`${__dirname}/../static/pages/index.html`),
@@ -101,7 +113,7 @@ const renderHtml = async (content, res) => {
     await Promise.all(
       Object.keys(data).map(async key => {
         if (typeof data[key] === 'function') {
-          data[key] = await data[key]();
+          data[key] = await data[key](req);
         }
       }),
     );
@@ -116,7 +128,7 @@ const renderHtml = async (content, res) => {
   }
 };
 
-const partialSuccess = async (html, fileName, callback, extendedPage) => {
+const partialSuccess = async (html, fileName, callback, extendedPage, req) => {
   let data = {};
   try {
     data = requireUncached(
@@ -128,7 +140,7 @@ const partialSuccess = async (html, fileName, callback, extendedPage) => {
   await Promise.all(
     Object.keys(data).map(async key => {
       if (typeof data[key] === 'function') {
-        data[key] = await data[key]();
+        data[key] = await data[key](req);
       }
     }),
   );
@@ -176,17 +188,17 @@ const partialSuccess = async (html, fileName, callback, extendedPage) => {
   callback(minify(content, MINIFIER_OPTIONS));
 };
 
-const getPartialHtml = (fileName, extendedPage = '') =>
+const getPartialHtml = (req, fileName, extendedPage = '') =>
   new Promise(async (resolve, reject) => {
     try {
       const html = await readFile(
         path.join(`${__dirname}/../static/pages${fileName}.html`),
       );
-      partialSuccess(html, fileName, resolve, extendedPage);
+      partialSuccess(html, fileName, resolve, extendedPage, req);
     } catch (err) {
       if (!fileName.includes('/index')) {
         try {
-          const data = await getPartialHtml(`${fileName}/index`);
+          const data = await getPartialHtml(req, `${fileName}/index`);
           resolve(data);
         } catch (e) {
           reject(e);
@@ -232,7 +244,7 @@ app.get('/static/others/*', (req, res) =>
 );
 app.get('/partial', async (req, res) => {
   try {
-    const data = await getPartialHtml(`/${LANDING_PAGE}`);
+    const data = await getPartialHtml(req, `/${LANDING_PAGE}`);
     res.send(data);
   } catch (err) {
     res.status(404).send(err);
@@ -248,7 +260,7 @@ app.get('/partial/*', async (req, res) => {
           .fill('')
           .map((a, i) => paths[i])
           .join('/');
-        return await getPartialHtml(`${route ? '/' : ''}${route}/${p}`);
+        return await getPartialHtml(req, `${route ? '/' : ''}${route}/${p}`);
       } catch (e) {
         return null;
       }
@@ -278,8 +290,8 @@ app.get('/partial/*', async (req, res) => {
 });
 app.get('/', async (req, res) => {
   try {
-    const data = await getPartialHtml(`/${LANDING_PAGE}`);
-    renderHtml(data, res);
+    const data = await getPartialHtml(req, `/${LANDING_PAGE}`);
+    renderHtml(data, res, req);
   } catch (err) {
     res.status(404).send(err);
   }
@@ -294,7 +306,7 @@ app.get('*', async (req, res) => {
           .fill('')
           .map((a, i) => paths[i])
           .join('/');
-        return await getPartialHtml(`${route ? '/' : ''}${route}/${p}`);
+        return await getPartialHtml(req, `${route ? '/' : ''}${route}/${p}`);
       } catch (e) {
         return null;
       }
@@ -319,7 +331,7 @@ app.get('*', async (req, res) => {
             : acc || cur,
         '',
       );
-    renderHtml(html.replace(/\?{.*?}\?/g, ''), res);
+    renderHtml(html.replace(/\?{.*?}\?/g, ''), res, req);
   }
 });
 
