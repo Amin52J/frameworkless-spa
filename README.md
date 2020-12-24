@@ -1,3 +1,5 @@
+**Note:** This project is merely a proof of concept.
+
 # Frameworkless-SPA
 
 A frameworkless single page application boilerplate. [**LIVE DEMO**](http://movie-collection.amin52j.com)
