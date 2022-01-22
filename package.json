@@ -17,7 +17,7 @@
     "fs": "^0.0.1-security",
     "html-minifier": "^4.0.0",
     "mustache": "^3.0.1",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^3.1.1",
     "path": "^0.12.7"
   },
   "devDependencies": {
